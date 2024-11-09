@@ -2,18 +2,24 @@
 {
     public class Employee
     {
-        public string firstName { get; }
-        public string lastName {  get; }
-        public string socialSecurityNumber { get; }
-        public Account PaymentAccount { get; }
+        public Employee() { } // Parameterless constructor
 
-        public Employee(string? firstName, string? lastName, string? socialSecurityNumber, Account paymentAccount)
+        public Employee(string firstName, string lastName, string socialSecurityNumber)
         {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.socialSecurityNumber = socialSecurityNumber;
+            FirstName = firstName;
+            LastName = lastName;
+            SocialSecurityNumber = socialSecurityNumber;
         }
-
-       
+        public Employee(string firstName, string lastName, string socialSecurityNumber, Account paymentAccount)
+            :this(firstName, lastName, socialSecurityNumber)
+        {
+            
+            PaymentAccount = paymentAccount;
+        }
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string SocialSecurityNumber { get; set; }
+        public Account PaymentAccount { get; set; }
     }
 }

@@ -1,16 +1,19 @@
 ﻿namespace Datalagring_ProjectManager_EFCore.Models
 {
     public class Account
-    {
-        public string clearingNumber { get; }
-        public string accountNumber { get; }
-        public string bank { get; }
+    {       
 
         public Account(string clearingNumber, string accountNumber, string bank)
         {
-            this.clearingNumber = clearingNumber;
-            this.accountNumber = accountNumber;
-            this.bank = bank;
+            ClearingNumber = clearingNumber;
+            AccountNumber = accountNumber;
+            Bank = bank;
         }
+        public int Id { get; protected set; }
+        public string ClearingNumber { get; protected set; }
+        public string AccountNumber { get; protected set; }
+        public string Bank { get; protected set; }
+        public int EmployeeId { get; protected set; }
+
     }
 }

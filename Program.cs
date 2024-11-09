@@ -1,13 +1,21 @@
-﻿using Datalagring_ProjectManager_EFCore.Models;
+﻿using Datalagring_ProjectManager_EFCore.Data;
+using Datalagring_ProjectManager_EFCore.Models;
+using Microsoft.Extensions.Logging;
 using static System.Console;
 
 namespace Datalagring_ProjectManager_EFCore
 {
-    internal class Program
+    class Program
     {
+        //static ILoggerFactory MyLoggerFactory = LoggerFactory.Create(DbContextOptionsBuilder => DbContextOptionsBuilder.AddConsole());
+        //static ProjectManagerContext context = new ProjectManagerContext(MyLoggerFactory);
+
+        static ProjectManagerContext Context = new ProjectManagerContext();
+
         static void Main(string[] args)
         {
             bool shouldNotExit = true;
+
             while (shouldNotExit)
             {
                 WriteLine("");
@@ -55,13 +63,13 @@ namespace Datalagring_ProjectManager_EFCore
 
         private static void AddEmployee()
         {
-            Write("Förnamn: ");
+            Write("First name: ");
             string firstName = ReadLine();
 
-            Write("Efternamn: ");
+            Write("Last name: ");
             string lastName = ReadLine();
 
-            Write("Personnummer: ");
+            Write("Social security number: ");
             string socialSecurityNumber = ReadLine();            
 
             Write("Clearing nr: ");
@@ -73,16 +81,47 @@ namespace Datalagring_ProjectManager_EFCore
             Write("Bank: ");
             string bank = ReadLine();
 
-            Account paymentAccount = new Account(clearingNumber ,accountNumber,bank);
+            Account paymentAccount = new Account(clearingNumber ,accountNumber, bank);
 
             Employee employee = new Employee(firstName, lastName, socialSecurityNumber, paymentAccount);
             SaveEmployee(employee);
+
+            Clear();
+
+            WriteLine("Employee added");
+
+            Thread.Sleep(2000);
 
         }
 
         private static void SaveEmployee(Employee employee)
         {
-           
+            if (employee.Id < 1)
+            {
+                Context.Employees.Add(employee);
+            }
+
+            Context.SaveChanges();
+        }
+        private static void ListEmployees()
+        {
+            using (var context = new ProjectManagerContext())
+            {
+                var employees = context.Employees.ToList();
+                if (employees.Count == 0)
+                {
+                    WriteLine("No employees found.");
+                }
+                else
+                {
+                    foreach (var employee in employees)
+                    {
+                        WriteLine($"ID: {employee.Id}, Name: {employee.FirstName} {employee.LastName}, SSN: {employee.SocialSecurityNumber}");
+                    }
+                }
+            }
+            WriteLine("Press any key to continue...");
+            ReadKey(true);
         }
     }
 }
