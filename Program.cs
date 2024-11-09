@@ -37,7 +37,7 @@ namespace Datalagring_ProjectManager_EFCore
                     // List employees
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
-                        //ListaEmployees();
+                        ListEmployees();
                         ReadKey(true);
                         break;
                     //// Utför besiktning
