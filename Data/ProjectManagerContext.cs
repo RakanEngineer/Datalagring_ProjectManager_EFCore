@@ -12,6 +12,8 @@ namespace Datalagring_ProjectManager_EFCore.Data
     class ProjectManagerContext : DbContext
     {
         public DbSet<Employee> Employees { get; set; }
+        //public DbSet<Department> Department { get; set; }
+
         //public ILoggerFactory Factory { get; }
         //public ProjectManagerContext(ILoggerFactory factory)
         //{

@@ -1,5 +1,6 @@
 ﻿using Datalagring_ProjectManager_EFCore.Data;
 using Datalagring_ProjectManager_EFCore.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using static System.Console;
 
@@ -10,7 +11,7 @@ namespace Datalagring_ProjectManager_EFCore
         //static ILoggerFactory MyLoggerFactory = LoggerFactory.Create(DbContextOptionsBuilder => DbContextOptionsBuilder.AddConsole());
         //static ProjectManagerContext context = new ProjectManagerContext(MyLoggerFactory);
 
-        static ProjectManagerContext Context = new ProjectManagerContext();
+        static ProjectManagerContext context = new ProjectManagerContext();
 
         static void Main(string[] args)
         {
@@ -21,8 +22,8 @@ namespace Datalagring_ProjectManager_EFCore
                 WriteLine("");
                 WriteLine("1. Add employee");
                 WriteLine("2. List employees");
-                WriteLine("3. Utför besiktning");
-                WriteLine("4. Lista besiktningar");
+                WriteLine("3. Add department");
+                WriteLine("4. List department");
                 WriteLine("5. Avsluta");
 
                 ConsoleKeyInfo keyPressed = ReadKey(true);
@@ -40,16 +41,16 @@ namespace Datalagring_ProjectManager_EFCore
                         ListEmployees();
                         ReadKey(true);
                         break;
-                    //// Utför besiktning
-                    //case ConsoleKey.D3:
-                    //case ConsoleKey.NumPad3:
-                    //    UtförBesiktning();
-                    //    break;
-                    //case ConsoleKey.D4:
-                    //case ConsoleKey.NumPad4:
-                    //    ListaBesiktningar();
-                    //    ReadKey(true);
-                    //    break;
+                    // Add department
+                    case ConsoleKey.D3:
+                    case ConsoleKey.NumPad3:
+                        AddDepartment();
+                        break;
+                    case ConsoleKey.D4:
+                    case ConsoleKey.NumPad4:
+                        
+                        ReadKey(true);
+                        break;
                     case ConsoleKey.D5:
                     case ConsoleKey.NumPad5:
                         shouldNotExit = true;
@@ -59,6 +60,23 @@ namespace Datalagring_ProjectManager_EFCore
                 Clear();
             }
 
+        }
+
+        private static void AddDepartment()
+        {
+            Write("Name: ");
+            string name = ReadLine();
+            Department department = new Department(name);
+            SaveDepartment(department);
+            Clear();
+            WriteLine("Department added");
+            Thread.Sleep(2000);
+        }
+
+        private static void SaveDepartment(Department department)
+        {
+            //context.Department.Add(department); 
+            //context.SaveChanges();
         }
 
         private static void AddEmployee()
@@ -81,14 +99,26 @@ namespace Datalagring_ProjectManager_EFCore
             Write("Bank: ");
             string bank = ReadLine();
 
-            Account paymentAccount = new Account(clearingNumber ,accountNumber, bank);
+            //Write("Department: ");
+            //string departmentName = ReadLine();
+            //Department department = context.Department.FirstOrDefault(x => x.Name == departmentName);
+            //if (department != null)
+            {
+                Account paymentAccount = new Account(clearingNumber, accountNumber, bank);
 
-            Employee employee = new Employee(firstName, lastName, socialSecurityNumber, paymentAccount);
-            SaveEmployee(employee);
+                Employee employee = new Employee(firstName, lastName, socialSecurityNumber, paymentAccount);
+                SaveEmployee(employee);
 
-            Clear();
+                Clear();
 
-            WriteLine("Employee added");
+                WriteLine("Employee added");
+            }
+            //else
+            //{
+            //    WriteLine("Department not found");
+            //}
+
+            
 
             Thread.Sleep(2000);
 
@@ -98,16 +128,20 @@ namespace Datalagring_ProjectManager_EFCore
         {
             if (employee.Id < 1)
             {
-                Context.Employees.Add(employee);
+                context.Employees.Add(employee);
             }
 
-            Context.SaveChanges();
+            context.SaveChanges();
         }
         private static void ListEmployees()
         {
             using (var context = new ProjectManagerContext())
             {
-                var employees = context.Employees.ToList();
+                var employees = context.Employees.Include(x=> x.PaymentAccount).ToList();
+
+                Write("Namn".PadRight(20, ' '));
+                WriteLine("Account nummer");
+                WriteLine("------------------------------------------------");
                 if (employees.Count == 0)
                 {
                     WriteLine("No employees found.");
@@ -116,7 +150,7 @@ namespace Datalagring_ProjectManager_EFCore
                 {
                     foreach (var employee in employees)
                     {
-                        WriteLine($"ID: {employee.Id}, Name: {employee.FirstName} {employee.LastName}, SSN: {employee.SocialSecurityNumber}");
+                        WriteLine($"{employee.FirstName} {employee.LastName},{employee.SocialSecurityNumber}, {employee.PaymentAccount.ClearingNumber}");
                     }
                 }
             }

@@ -1,8 +1,7 @@
 ﻿namespace Datalagring_ProjectManager_EFCore.Models
 {
     public class Employee
-    {
-        public Employee() { } // Parameterless constructor
+    {      
 
         public Employee(string firstName, string lastName, string socialSecurityNumber)
         {
@@ -12,14 +11,17 @@
         }
         public Employee(string firstName, string lastName, string socialSecurityNumber, Account paymentAccount)
             :this(firstName, lastName, socialSecurityNumber)
-        {
-            
+        {            
             PaymentAccount = paymentAccount;
+            
         }
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string SocialSecurityNumber { get; set; }
-        public Account PaymentAccount { get; set; }
+        public int Id { get; protected set; }
+        public string FirstName { get; protected set; }
+        public string LastName { get; protected set; }
+        public string SocialSecurityNumber { get; protected set; }
+        public Account PaymentAccount { get; protected set; }
+        //public int DepartmentId { get; protected set; }
+        //public Department Department { get; protected set; }
+
     }
 }

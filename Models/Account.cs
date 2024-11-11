@@ -14,6 +14,7 @@
         public string AccountNumber { get; protected set; }
         public string Bank { get; protected set; }
         public int EmployeeId { get; protected set; }
+        public Employee Employee { get; protected set; }
 
     }
 }
